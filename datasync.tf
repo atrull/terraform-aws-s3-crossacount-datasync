@@ -3,12 +3,19 @@ resource "aws_datasync_task" "example" {
   destination_location_arn = aws_datasync_location_s3.destination_bucket_example.arn
   name                     = "this-source-to-destination-example"
   source_location_arn      = aws_datasync_location_s3.source_bucket_example.arn
+  cloudwatch_log_group_arn = module.datasync_logging_example.cloudwatch_log_group_arn
 
   options {
     bytes_per_second  = -1
     posix_permissions = "NONE"
     uid               = "NONE"
     gid               = "NONE"
+    verify_mode       = "NONE"
+    log_level         = "BASIC"
+  }
+
+  schedule {
+    schedule_expression = "cron(0 */8 * * ? *)" # every 8 hours
   }
 }
 
